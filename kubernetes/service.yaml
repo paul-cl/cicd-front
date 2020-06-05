@@ -8,5 +8,5 @@ spec:
     appname: lab99-frontend
   ports:
     - name: port-lab99-frontend
-      port: 3000
+      port: 8080
       targetPort: 3000
