@@ -40,6 +40,7 @@ podTemplate(label: label, containers: [
 		def credentialRegistry=props["credentialRegistry"] 
 		def sonarQubeURL = props["sonarQubeURL"]
 		def sonarQubeProject = props["sonarQubeProject"]
+		def sonarQubeToken = props["sonarQubeToken"]
 
 		// 재배포를 위한 tag를 재정의
 		def timeStamp = System.currentTimeMillis()
@@ -47,17 +48,17 @@ podTemplate(label: label, containers: [
 		tag = tag+"-"+timeStamp
 
 		// #3 빌드 Stage
-		stage('docker build') {
-			sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
-		}
 
 		// #4 Sonarqube 정적분석 Stage
 		echo "Start call container"
+		stage('sonar-scanner') {
+			sh "sonar-scanner \
+			-Dsonar.projectName=${sonarQubeProject} \
+			-Dsonar.host.url=${sonarQubeURL} \ 
+			-Dsonar.login=${sonarQubeToken} \
+			-Dsonar.projectBaseDir=./"
+		}
 
-	// 	sh "sonar-scanner \
-    // -Dsonar.projectName=${sonarQubeProject} \
-    // -Dsonar.host.url=${sonarQubeURL}"
-    // -Dsonar.projectBaseDir=./
 
 
 		// #5 컨테이너 이미지 생성 Stage
@@ -66,6 +67,7 @@ podTemplate(label: label, containers: [
 			container('docker') {
 				echo "Start docker"
 				docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
+					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
 					sh "docker push ${image}:${tag}"
 					sh "docker tag ${image}:${tag} ${image}:latest"
 					sh "docker push ${image}:latest"
