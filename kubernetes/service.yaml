@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: lab99-front-svc
+  name: lab99-frontend-svc
 spec:
   type: NodePort
   selector:
