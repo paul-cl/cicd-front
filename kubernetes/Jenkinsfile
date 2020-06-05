@@ -23,7 +23,6 @@ podTemplate(label: label, containers: [
 		// #1 Github 소스 가져오기
 		stage('Get Source') {
 			// git credentialsId: '{GITHUB Credential ID}', url: '{GITHUB URL}', branch: 'master'
-
 			git "https://github.com/paul-cl/cicd-front.git"
 		}
 
@@ -52,6 +51,7 @@ podTemplate(label: label, containers: [
 
 		// #5 컨테이너 이미지 생성 Stage
 		stage('Dockerizing') {
+			
 			container('docker') {
 				docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
 					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
@@ -79,7 +79,7 @@ podTemplate(label: label, containers: [
 
 	} catch(e) {
 		// Slack - 빌드 실패시
-
+		echo "Fail : " + e
 	}
   }
 }
