@@ -6,10 +6,10 @@ def label = "worker-${UUID.randomUUID().toString()}"
 podTemplate(label: label, containers: [
 // #0 필요한 Pod생성
 
-	containerTemplate(name: 'npm', image: 'node:lts', command: 'cat', ttyEnabled: true),
+	// containerTemplate(name: 'npm', image: 'node:lts', command: 'cat', ttyEnabled: true),
 	//containerTemplate(name: 'gradle', image: 'gradle:4.5.1-jdk8', command: 'cat', ttyEnabled: true),
 	//containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
-	containerTemplate(name: "scanner", image: "newtmitch/sonar-scanner", ttyEnabled: true, command: "cat"),
+	// containerTemplate(name: "scanner", image: "newtmitch/sonar-scanner", ttyEnabled: true, command: "cat"),
 	containerTemplate(name: 'docker', image: 'docker:dind', command: 'dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay', ttyEnabled: true, alwaysPullImage: true, privileged: true),
 	containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEnabled: true)
 
@@ -54,12 +54,14 @@ podTemplate(label: label, containers: [
 		stage('Dockerizing') {
 			echo "Start Dockerizing"
 			container('docker') {
+				echo "Start docker"
 				docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
 					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
 					sh "docker push ${image}:${tag}"
 					sh "docker tag ${image}:${tag} ${image}:latest"
 					sh "docker push ${image}:latest"
 				}
+
 			}
 		}
 
