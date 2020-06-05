@@ -47,16 +47,25 @@ podTemplate(label: label, containers: [
 		tag = tag+"-"+timeStamp
 
 		// #3 빌드 Stage
+		stage('docker build') {
+			sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
+		}
 
 		// #4 Sonarqube 정적분석 Stage
 		echo "Start call container"
+
+	// 	sh "sonar-scanner \
+    // -Dsonar.projectName=${sonarQubeProject} \
+    // -Dsonar.host.url=${sonarQubeURL}"
+    // -Dsonar.projectBaseDir=./
+
+
 		// #5 컨테이너 이미지 생성 Stage
 		stage('Dockerizing') {
 			echo "Start Dockerizing"
 			container('docker') {
 				echo "Start docker"
 				docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
-					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
 					sh "docker push ${image}:${tag}"
 					sh "docker tag ${image}:${tag} ${image}:latest"
 					sh "docker push ${image}:latest"
