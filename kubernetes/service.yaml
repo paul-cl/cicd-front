@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: 
-  labels:
-    name: 
+  name: lab99-frontend-svc
+  labels: lab99-frontend-svc
+    name: lab99-frontend-svc
 spec:
   ports:
     - port: 3000
       targetPort: 3000
       protocol: TCP
   selector:
-    app: 
+    app: lab99-frontend
   type: NodePort
