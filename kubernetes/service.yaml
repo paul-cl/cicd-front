@@ -5,7 +5,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    appname: lab99-frontend
+    app: lab99-frontend
   ports:
     - name: port-lab99-frontend
       port: 8081
