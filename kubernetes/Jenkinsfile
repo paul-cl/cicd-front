@@ -52,11 +52,11 @@ podTemplate(label: label, containers: [
 		// #4 Sonarqube 정적분석 Stage
 		echo "Start call container"
 		stage('sonar-scanner') {
-			sh "sonar-scanner \
-			-Dsonar.projectName=${sonarQubeProject} \
-			-Dsonar.host.url=${sonarQubeURL} \ 
-			-Dsonar.login=${sonarQubeToken} \
-			-Dsonar.projectBaseDir=./"
+			sh "sonar-scanner \ 
+				-Dsonar.projectName=${sonarQubeProject} \
+				-Dsonar.host.url=${sonarQubeURL} \ 
+				-Dsonar.login=${sonarQubeToken} \
+				-Dsonar.projectBaseDir=./"
 		}
 
 
