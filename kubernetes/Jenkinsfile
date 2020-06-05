@@ -9,7 +9,7 @@ podTemplate(label: label, containers: [
 	// containerTemplate(name: 'npm', image: 'node:lts', command: 'cat', ttyEnabled: true),
 	//containerTemplate(name: 'gradle', image: 'gradle:4.5.1-jdk8', command: 'cat', ttyEnabled: true),
 	//containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
-	// containerTemplate(name: "scanner", image: "newtmitch/sonar-scanner", ttyEnabled: true, command: "cat"),
+	containerTemplate(name: "scanner", image: "newtmitch/sonar-scanner", ttyEnabled: true, command: "cat"),
 	containerTemplate(name: 'docker', image: 'docker:dind', command: 'dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay', ttyEnabled: true, alwaysPullImage: true, privileged: true),
 	containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEnabled: true)
 
@@ -52,10 +52,12 @@ podTemplate(label: label, containers: [
 		// #4 Sonarqube 정적분석 Stage
 		echo "Start call container"
 		stage('sonar-scanner') {
-			sh "sonar-scanner -Dsonar.projectName=${sonarQubeProject} \	
-				-Dsonar.host.url=${sonarQubeURL} \ 
-				-Dsonar.login=${sonarQubeToken} \
-				-Dsonar.projectBaseDir=./ "
+			container("scanner") {
+				sh "sonar-scanner -Dsonar.projectName=${sonarQubeProject} \
+					-Dsonar.host.url=${sonarQubeURL} \ 
+					-Dsonar.login=${sonarQubeToken} \
+					-Dsonar.projectBaseDir=./ "
+			}
 		}
 
 
