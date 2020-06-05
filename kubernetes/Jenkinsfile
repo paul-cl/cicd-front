@@ -30,14 +30,14 @@ podTemplate(label: label, containers: [
 		// #2 Properties 파일 읽기		
 		def props = readProperties file:"./kubernetes/pipeline.properties" 
 		def tag = props["version"]
-		def dockerRegistry = props["dockerRegistry"]
-		def credentialRegistry=props["credentialRegistry"] 
+		def namespace = props["namespace"]
 		def image = props["image"]
 		def appname = props["appname"]
 		def containername = props["containerName"]
 		def deployment = props["deployment"]
 		def service = props["service"]
-		def namespace = props["namespace"]
+		def dockerRegistry = props["dockerRegistry"]
+		def credentialRegistry=props["credentialRegistry"] 
 		def sonarQubeURL = props["sonarQubeURL"]
 		def sonarQubeProject = props["sonarQubeProject"]
 
@@ -49,10 +49,10 @@ podTemplate(label: label, containers: [
 		// #3 빌드 Stage
 
 		// #4 Sonarqube 정적분석 Stage
-
+		echo "Start call container"
 		// #5 컨테이너 이미지 생성 Stage
 		stage('Dockerizing') {
-			
+			echo "Start Dockerizing"
 			container('docker') {
 				docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
 					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
@@ -66,6 +66,7 @@ podTemplate(label: label, containers: [
 
 		// #6 배포 Stage
 		stage('Deploy') {
+			echo "Start Deply"
 			container('kubectl') {
 				sh "kubectl apply -n ${namespace} -f ${deployment}"
 				sh "kubectl apply -n ${namespace} -f ${service}"
@@ -74,7 +75,7 @@ podTemplate(label: label, containers: [
 		}
 
 
-
+		echo "End"
 		// Slack - 빌드 성공시
 
 
