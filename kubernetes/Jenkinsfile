@@ -53,16 +53,16 @@ podTemplate(label: label, containers: [
 		// #5 컨테이너 이미지 생성 Stage
 		stage('Dockerizing') {
 			echo "Start Dockerizing"
-			container('docker') {
-				echo "Start docker"
-				docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
-					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
-					sh "docker push ${image}:${tag}"
-					sh "docker tag ${image}:${tag} ${image}:latest"
-					sh "docker push ${image}:latest"
-				}
+			// container('docker') {
+			// 	echo "Start docker"
+			// 	docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
+			// 		sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
+			// 		sh "docker push ${image}:${tag}"
+			// 		sh "docker tag ${image}:${tag} ${image}:latest"
+			// 		sh "docker push ${image}:latest"
+			// 	}
 
-			}
+			// }
 		}
 
 

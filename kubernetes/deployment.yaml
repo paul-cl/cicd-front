@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: lab99-frontend
-          image: nextgencloud/lab99-frontend
+          image: happycloudpak/lab99-frontend
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
