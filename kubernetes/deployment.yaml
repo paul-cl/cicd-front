@@ -19,4 +19,4 @@ spec:
           image: happycloudpak/lab99-frontend
           imagePullPolicy: Always
           ports:
-            - containerPort: 8081
+            - containerPort: 3000
