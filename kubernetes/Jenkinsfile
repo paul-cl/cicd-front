@@ -25,6 +25,7 @@ podTemplate(label: label, containers: [
 			// git credentialsId: '{GITHUB Credential ID}', url: '{GITHUB URL}', branch: 'master'
 			git "https://github.com/paul-cl/cicd-front.git"
 		}
+		def output = sh(script: 'ls -al', returnStdout: true)
 
 		// #2 Properties 파일 읽기		
 		def props = readProperties file:"./kubernetes/pipeline.properties" 
@@ -68,7 +69,7 @@ podTemplate(label: label, containers: [
 			container('kubectl') {
 				sh "kubectl apply -n ${namespace} -f ${deployment}"
 				sh "kubectl apply -n ${namespace} -f ${service}"
-				sh "kubectl get svc -n devops" 
+				sh "kubectl get svc -n ${namespace} " 
 			}
 		}
 
